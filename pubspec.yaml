@@ -37,9 +37,10 @@ dependencies:
   responsive_sizer: ^3.0.8
   tab_container: ^2.0.0
   circular_profile_avatar: ^2.0.5
-  amplify_flutter: ^0.6.0
-  amplify_api: ^0.6.0
-  amplify_auth_cognito: ^0.6.0
+  #amplify_flutter: ^0.6.0
+  #amplify_api: ^0.6.0
+  #amplify_auth_cognito: ^0.6.0
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

@@ -1,13 +1,14 @@
+import 'dart:convert';
 import 'dart:typed_data';
-
+import 'package:http/http.dart' as http;
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tab_container/tab_container.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'amplifyconfiguration.dart';
+//import 'package:amplify_flutter/amplify_flutter.dart';
+//import 'package:amplify_api/amplify_api.dart';
+//import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+//import 'amplifyconfiguration.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,39 +43,22 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _configureAmplify();
+    //_configureAmplify();
   }
 
-  Future<void> _configureAmplify() async {
-    // Add the following line to add API plugin to your app.
-    // Auth plugin needed for IAM authorization mode, which is default for REST API.
-    final auth = AmplifyAuthCognito();
-    final api = AmplifyAPI();
-    await Amplify.addPlugins([api, auth]);
-
-    try {
-      await Amplify.configure(amplifyconfig);
-    } on AmplifyAlreadyConfiguredException {
-      //safePrint('Tried to reconfigure Amplify; this can occur when your app restarts on Android.');
-    }
+  Future<http.Response> createGoal() {
+    return http.post(
+      Uri.parse('https://r42nn0yzsb.execute-api.us-east-1.amazonaws.com/production/creategoal'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'GoalID': "6",
+        "GoalName": "TestGoal6"
+      }),
+    );
   }
 
-  Future<void> onTestApi() async {
-    try {
-      final options = RestOptions(
-          path: '/creategoal',
-          body: Uint8List.fromList('{\'GoalID\':\'2\', \'GoalName\':\'TestGoal2\'}'.codeUnits)
-      );
-      final restOperation = Amplify.API.get(
-          restOptions: options
-      );
-      final response = await restOperation.response;
-      //print('POST call succeeded');
-      //print(String.fromCharCodes(response.data));
-    } on ApiException catch (e) {
-      //print('POST call failed: $e');
-    }
-  }
 
   Widget build(BuildContext context) {
     return ResponsiveSizer(
@@ -150,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             child: ElevatedButton(
                                               child: Text('+ Goal', style: TextStyle(fontSize: 15.sp),),
                                               onPressed: () {
-                                                onTestApi();
+                                                createGoal();
                                               },
                                               style: ButtonStyle(
                                                 backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
